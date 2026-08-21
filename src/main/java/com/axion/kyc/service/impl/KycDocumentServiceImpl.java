@@ -35,8 +35,6 @@ public class KycDocumentServiceImpl
     private final KycDocumentRepository documentRepository;
     private final DocumentStorageService documentStorageService;
     private final KycFileValidationService fileValidationService;
-    private final DocumentAnalysisService documentAnalysisService;
-    
     public KycDocumentServiceImpl(
             CustomerRepository customerRepository,
             KycRepository kycRepository,
@@ -50,7 +48,6 @@ public class KycDocumentServiceImpl
         this.documentRepository = documentRepository;
         this.documentStorageService = documentStorageService;
         this.fileValidationService = fileValidationService;
-        this.documentAnalysisService = documentAnalysisService;
     }
 
     @Override

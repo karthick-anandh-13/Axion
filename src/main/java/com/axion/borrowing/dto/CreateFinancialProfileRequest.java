@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 
 import com.axion.borrowing.entity.EmploymentType;
 
-import com.axion.borrowing.entity.EmploymentType;
-
 import jakarta.validation.constraints.*;
 
 public record CreateFinancialProfileRequest(

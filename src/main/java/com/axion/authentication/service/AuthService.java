@@ -4,10 +4,13 @@ import com.axion.authentication.dto.LoginRequest;
 import com.axion.authentication.dto.LoginResponse;
 import com.axion.authentication.dto.RegisterRequest;
 import com.axion.authentication.dto.UserResponse;
+import com.axion.authentication.dto.RefreshTokenRequest;
 
 public interface AuthService {
 
     UserResponse register(RegisterRequest request);
 
     LoginResponse login(LoginRequest request);
+
+    LoginResponse refreshAccessToken(RefreshTokenRequest request);
 }

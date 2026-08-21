@@ -3,6 +3,7 @@ package com.axion.matching.service.impl;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import com.axion.matching.dto.MatchResponse;
@@ -19,7 +20,7 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     @Override
-    public List<MatchResponse> getTopMatches(UUID borrowingRequestId) {
+    public @NonNull List<MatchResponse> getTopMatches(@NonNull UUID borrowingRequestId) {
         return matchingEngine.generateMatches(borrowingRequestId);
     }
 }

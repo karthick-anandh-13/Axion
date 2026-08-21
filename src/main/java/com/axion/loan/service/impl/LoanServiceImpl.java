@@ -1,8 +1,10 @@
 package com.axion.loan.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,14 +41,13 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public UUID createLoanFromOffer(UUID loanOfferId) {
+    public @NonNull UUID createLoanFromOffer(@NonNull UUID loanOfferId) {
 
         LoanOffer offer = offerRepository.findById(loanOfferId)
                 .orElseThrow(() -> new IllegalArgumentException("Loan offer not found"));
 
-        if (offer.getStatus() != LoanOfferStatus.GENERATED
-                && offer.getStatus() != LoanOfferStatus.VIEWED) {
-
+        if (offer.getStatus() != LoanOfferStatus.GENERATED &&
+            offer.getStatus() != LoanOfferStatus.VIEWED) {
             throw new IllegalStateException("Loan offer cannot be accepted");
         }
 
@@ -57,16 +58,14 @@ public class LoanServiceImpl implements LoanService {
                 .tenureMonths(offer.getTenureMonths())
                 .monthlyEmi(offer.getMonthlyEmi())
                 .outstandingBalance(offer.getPrincipal())
-                .disbursementDate(java.time.LocalDate.now())
-                .maturityDate(java.time.LocalDate.now().plusMonths(offer.getTenureMonths()))
+                .disbursementDate(LocalDate.now())
+                .maturityDate(LocalDate.now().plusMonths(offer.getTenureMonths()))
                 .status(LoanStatus.PENDING_DISBURSEMENT)
                 .build();
 
         loan = loanRepository.save(loan);
 
-        List<EmiInstallment> installments =
-                scheduleGenerator.generateSchedule(loan);
-
+        List<EmiInstallment> installments = scheduleGenerator.generateSchedule(loan);
         installmentRepository.saveAll(installments);
 
         offer.setStatus(LoanOfferStatus.ACCEPTED);

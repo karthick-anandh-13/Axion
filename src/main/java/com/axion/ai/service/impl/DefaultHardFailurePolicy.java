@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import com.axion.ai.service.HardFailurePolicy;
 import com.axion.kyc.entity.VerificationSignal;
 import com.axion.kyc.entity.VerificationSignalResult;
-import com.axion.kyc.entity.VerificationSignalType;
 
 @Service
 public class DefaultHardFailurePolicy

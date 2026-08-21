@@ -1,8 +1,10 @@
 package com.axion.payment.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +16,8 @@ import com.axion.loan.entity.RepaymentStatus;
 import com.axion.loan.repository.EmiInstallmentRepository;
 import com.axion.loan.repository.LoanRepository;
 import com.axion.loan.schedule.EmiInstallment;
-import com.axion.notification.service.NotificationService;
 import com.axion.notification.entity.NotificationType;
+import com.axion.notification.service.NotificationService;
 import com.axion.payment.dto.CreatePaymentRequest;
 import com.axion.payment.entity.Payment;
 import com.axion.payment.entity.PaymentStatus;
@@ -47,14 +49,13 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public UUID payInstallment(
-            UUID installmentId,
-            CreatePaymentRequest request) {
+    public @NonNull UUID payInstallment(
+            @NonNull UUID installmentId,
+            @NonNull CreatePaymentRequest request) {
 
-        EmiInstallment installment =
-                installmentRepository.findById(installmentId)
-                        .orElseThrow(() ->
-                                new IllegalArgumentException("Installment not found"));
+        EmiInstallment installment = installmentRepository.findById(installmentId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Installment not found"));
 
         if (installment.getStatus() == RepaymentStatus.PAID) {
             throw new IllegalStateException("Installment already paid");
@@ -72,16 +73,17 @@ public class PaymentServiceImpl implements PaymentService {
                 .paymentReference(generateReference())
                 .build();
 
-        paymentRepository.save(payment);
+        payment = Objects.requireNonNull(
+                paymentRepository.save(payment),
+                "Saved payment cannot be null");
 
         installment.setStatus(RepaymentStatus.PAID);
         installmentRepository.save(installment);
 
         Loan loan = installment.getLoan();
 
-        BigDecimal newBalance =
-                loan.getOutstandingBalance()
-                        .subtract(installment.getPrincipalComponent());
+        BigDecimal newBalance = loan.getOutstandingBalance()
+                .subtract(installment.getPrincipalComponent());
 
         if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
             newBalance = BigDecimal.ZERO;
@@ -101,28 +103,25 @@ public class PaymentServiceImpl implements PaymentService {
                 "EMI Payment - " + payment.getPaymentReference(),
                 AccountType.CASH,
                 AccountType.LOAN_RECEIVABLE,
-                payment.getAmount()
-        );
+                payment.getAmount());
 
-            notificationService.sendNotification(
+        notificationService.sendNotification(
                 loan.getAcceptedOffer()
-                    .getBorrowingRequest()
-                    .getBorrower()
-                    .getId(),
+                        .getBorrowingRequest()
+                        .getBorrower()
+                        .getId(),
                 NotificationType.EMI_RECEIPT,
                 "EMI Payment Successful",
-                "Your EMI payment of " + payment.getAmount()
-                    + " has been received successfully."
-            );
+                "Your EMI payment of ₹" + payment.getAmount()
+                        + " has been received successfully.");
 
-        return payment.getId();
+        return Objects.requireNonNull(payment.getId());
     }
 
     private String generateReference() {
-
-        return "PAY-" +
-                System.currentTimeMillis() +
-                "-" +
-                UUID.randomUUID().toString().substring(0, 6);
+        return "PAY-"
+                + System.currentTimeMillis()
+                + "-"
+                + UUID.randomUUID().toString().substring(0, 6);
     }
 }

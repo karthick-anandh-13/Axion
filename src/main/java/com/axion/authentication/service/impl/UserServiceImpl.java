@@ -1,14 +1,14 @@
 package com.axion.authentication.service.impl;
 
-import java.util.UUID;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.axion.authentication.entity.User;
 import com.axion.authentication.entity.Role;
+import com.axion.authentication.entity.User;
 import com.axion.authentication.exception.EmailAlreadyExistsException;
 import com.axion.authentication.exception.UserNotFoundException;
 import com.axion.authentication.exception.UsernameAlreadyExistsException;
@@ -16,8 +16,8 @@ import com.axion.authentication.repository.RoleRepository;
 import com.axion.authentication.repository.UserRepository;
 import com.axion.authentication.service.UserService;
 
-
 @Service
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -38,26 +38,24 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User createUser(User user) {
 
-        // Check whether username is already registered
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new UsernameAlreadyExistsException(
                     "Username '" + user.getUsername() + "' already exists."
             );
         }
 
-        // Check whether email is already registered
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyExistsException(
                     "Email '" + user.getEmail() + "' already exists."
             );
         }
 
-        // Hash password before storing it in the database
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         Role borrowerRole = roleRepository.findByName("BORROWER")
-        .orElseThrow(() ->
-                new IllegalStateException("Default BORROWER role not found.")
-        );
+                .orElseThrow(() ->
+                        new IllegalStateException("Default BORROWER role not found.")
+                );
 
         user.getRoles().add(borrowerRole);
 
@@ -67,12 +65,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(UUID id) {
 
-        return userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() ->
                         new UserNotFoundException(
                                 "User not found with id: " + id
                         )
                 );
+
+        // Initialize lazy roles within the transaction
+        user.getRoles().size();
+
+        return user;
     }
 
     @Override
@@ -99,15 +102,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean existsByUsername(String username) {
-
         return userRepository.existsByUsername(username);
     }
 
     @Override
     public boolean existsByEmail(String email) {
-
         return userRepository.existsByEmail(email);
     }
+
     @Override
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);

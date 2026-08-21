@@ -2,7 +2,10 @@ package com.axion.ai.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -18,7 +21,7 @@ public class KycAiClient {
 
     public KycAiClient(
             RestClient.Builder builder,
-            @Value("${axion.ai.base-url}") String baseUrl) {
+            @Value("${axion.ai.base-url}") @NonNull String baseUrl) {
 
         this.restClient = builder
                 .baseUrl(baseUrl)
@@ -26,9 +29,9 @@ public class KycAiClient {
     }
 
     public OcrAnalysisResponse analyze(
-            byte[] fileBytes,
-            String filename,
-            String contentType) {
+            @NonNull byte[] fileBytes,
+            @NonNull String filename,
+            @NonNull String contentType) {
 
         ByteArrayResource resource = new ByteArrayResource(fileBytes) {
             @Override
@@ -37,10 +40,15 @@ public class KycAiClient {
             }
         };
 
-            MultiValueMap<String, Object> body =
-                    new LinkedMultiValueMap<>();
+        HttpHeaders fileHeaders = new HttpHeaders();
+        MediaType mediaType = MediaType.parseMediaType(contentType);
+        fileHeaders.setContentType(mediaType);
 
-            body.add("file", resource);
+        HttpEntity<ByteArrayResource> fileEntity =
+                new HttpEntity<>(resource, fileHeaders);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("file", fileEntity);
 
         return restClient.post()
                 .uri("/api/v1/analyze")
@@ -51,10 +59,12 @@ public class KycAiClient {
     }
 
     public FaceMatchResult verifyFace(
-            byte[] documentImage,
-            String documentFilename,
-            byte[] selfieImage,
-            String selfieFilename) {
-        throw new UnsupportedOperationException("Face verification is not configured.");
+            @NonNull byte[] documentImage,
+            @NonNull String documentFilename,
+            @NonNull byte[] selfieImage,
+            @NonNull String selfieFilename) {
+
+        throw new UnsupportedOperationException(
+                "Face verification is not configured.");
     }
 }

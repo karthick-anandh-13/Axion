@@ -1,9 +1,9 @@
 package com.axion.asset.verification.impl;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -42,8 +42,11 @@ public class AssetVerificationServiceImpl
     public AssetVerificationResult verifyAsset(
             UUID assetId) {
 
+        UUID nonNullAssetId =
+                Objects.requireNonNull(assetId, "assetId");
+
         Asset asset =
-                assetRepository.findById(assetId)
+                assetRepository.findById(nonNullAssetId)
                         .orElseThrow(
                                 () -> new IllegalArgumentException(
                                         "Asset not found"

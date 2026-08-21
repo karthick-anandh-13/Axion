@@ -1,0 +1,2 @@
+ALTER TABLE kyc_documents
+ADD COLUMN IF NOT EXISTS analysis_confidence DOUBLE PRECISION;

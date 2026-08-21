@@ -1,6 +1,7 @@
 package com.axion.customer.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -140,7 +141,7 @@ public class CustomerAddressServiceImpl
                         addressId
                 );
 
-        addressRepository.delete(address);
+        addressRepository.delete(Objects.requireNonNull(address));
     }
 
     private Customer findCustomerByUserId(UUID userId) {

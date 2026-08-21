@@ -2,8 +2,11 @@ package com.axion.loan.service;
 
 import java.util.UUID;
 
+import org.springframework.lang.NonNull;
+
 public interface LoanService {
 
-    UUID createLoanFromOffer(UUID loanOfferId);
+    @NonNull
+    UUID createLoanFromOffer(@NonNull UUID loanOfferId);
 
 }

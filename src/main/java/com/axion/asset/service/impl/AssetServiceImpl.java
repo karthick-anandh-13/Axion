@@ -1,6 +1,7 @@
 package com.axion.asset.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -39,8 +40,11 @@ public class AssetServiceImpl
             UUID ownerId,
             CreateAssetRequest request) {
 
+        UUID requiredOwnerId =
+                Objects.requireNonNull(ownerId, "ownerId");
+
         User owner =
-                userRepository.findById(ownerId)
+                userRepository.findById(requiredOwnerId)
                         .orElseThrow(
                                 () -> new IllegalArgumentException(
                                         "Asset owner not found"
@@ -69,7 +73,9 @@ public class AssetServiceImpl
                         .build();
 
         Asset saved =
-                assetRepository.save(asset);
+                assetRepository.save(
+                        Objects.requireNonNull(asset, "asset")
+                );
 
         return toResponse(saved);
     }
@@ -79,8 +85,11 @@ public class AssetServiceImpl
     public AssetResponse getAsset(
             UUID assetId) {
 
+        UUID requiredAssetId =
+                Objects.requireNonNull(assetId, "assetId");
+
         Asset asset =
-                assetRepository.findById(assetId)
+                assetRepository.findById(requiredAssetId)
                         .orElseThrow(
                                 () -> new IllegalArgumentException(
                                         "Asset not found"

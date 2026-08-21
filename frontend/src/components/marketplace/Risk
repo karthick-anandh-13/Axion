@@ -1,0 +1,19 @@
+interface Props {
+  score: number;
+}
+
+export default function RiskBadge({ score }: Props) {
+  const safe = score >= 85;
+
+  return (
+    <div
+      className={`rounded-full px-3 py-1 text-xs font-medium ${
+        safe
+          ? "bg-[#C7F5D9]/10 text-[#C7F5D9]"
+          : "bg-[#F6E7C8]/10 text-[#F6E7C8]"
+      }`}
+    >
+      AI {score}
+    </div>
+  );
+}

@@ -106,4 +106,22 @@ public class KycDocument {
 
         updatedAt = LocalDateTime.now();
     }
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    @Builder.Default
+    private DocumentAnalysisStatus analysisStatus =
+            DocumentAnalysisStatus.NOT_ANALYZED;
+
+    private Double analysisConfidence;
+
+    @Column(length = 100)
+    private String extractedName;
+
+    @Column(length = 100)
+    private String extractedDocumentNumber;
+
+    @Column(length = 2000)
+    private String analysisReason;
+
+    private LocalDateTime analyzedAt;
 }

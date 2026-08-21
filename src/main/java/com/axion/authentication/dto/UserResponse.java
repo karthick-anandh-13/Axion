@@ -3,7 +3,6 @@ package com.axion.authentication.dto;
 import java.util.Set;
 import java.util.UUID;
 
-import com.axion.authentication.entity.Role;
 import com.axion.authentication.entity.UserStatus;
 
 import lombok.AllArgsConstructor;
@@ -24,5 +23,6 @@ public class UserResponse {
     private String lastName;
     private String phoneNumber;
     private UserStatus status;
-    private Set<Role> roles;
+    private Set<RoleResponse> roles;
 }
+

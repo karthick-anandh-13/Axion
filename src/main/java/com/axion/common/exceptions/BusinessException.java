@@ -1,4 +1,4 @@
-package com.axion.common.exception;
+package com.axion.common.exceptions;
 
 public class BusinessException extends RuntimeException {
 

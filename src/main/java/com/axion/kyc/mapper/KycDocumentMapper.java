@@ -61,6 +61,18 @@ public final class KycDocumentMapper {
                 document.getUpdatedAt()
         );
 
+        response.setAnalysisStatus(
+                document.getAnalysisStatus()
+        );
+
+        response.setAnalysisConfidence(
+                document.getAnalysisConfidence()
+        );
+
+        response.setAnalysisReason(
+                document.getAnalysisReason()
+        );
+
         return response;
     }
 }

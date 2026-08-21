@@ -6,7 +6,6 @@ import com.axion.borrowing.entity.EmploymentType;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.axion.borrowing.entity.EmploymentType;
 import com.axion.borrowing.entity.IncomeVerificationStatus;
 
 public record FinancialProfileResponse(

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.axion.kyc.entity.DocumentAnalysisStatus;
 import com.axion.kyc.entity.KycDocumentStatus;
 import com.axion.kyc.entity.KycDocumentType;
 
@@ -32,7 +33,13 @@ public class KycDocumentResponse {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+ 
+    private DocumentAnalysisStatus analysisStatus;
 
+    private Double analysisConfidence;
+
+    private String analysisReason;
+    
     public KycDocumentResponse() {
     }
 
@@ -130,5 +137,30 @@ public class KycDocumentResponse {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+    public DocumentAnalysisStatus getAnalysisStatus() {
+    return analysisStatus;
+    }
+
+    public void setAnalysisStatus(
+            DocumentAnalysisStatus analysisStatus) {
+        this.analysisStatus = analysisStatus;
+    }
+
+    public Double getAnalysisConfidence() {
+        return analysisConfidence;
+    }
+
+    public void setAnalysisConfidence(
+            Double analysisConfidence) {
+        this.analysisConfidence = analysisConfidence;
+    }
+
+    public String getAnalysisReason() {
+        return analysisReason;
+    }
+
+    public void setAnalysisReason(String analysisReason) {
+        this.analysisReason = analysisReason;
     }
 }

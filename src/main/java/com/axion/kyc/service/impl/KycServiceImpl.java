@@ -3,6 +3,7 @@ package com.axion.kyc.service.impl;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,27 +26,24 @@ public class KycServiceImpl implements KycService {
 
     private final KycRepository kycRepository;
     private final CustomerRepository customerRepository;
-    private final KycAutomationEngine kycAutomationEngine;
-    
     public KycServiceImpl(
             KycRepository kycRepository,
-            CustomerRepository customerRepository) {
+            CustomerRepository customerRepository,
+            KycAutomationEngine kycAutomationEngine) {
 
         this.kycRepository = kycRepository;
         this.customerRepository = customerRepository;
     }
 
     @Override
-    public KycResponse createKyc(UUID userId) {
+    public @NonNull KycResponse createKyc(
+            @NonNull UUID userId) {
 
         Customer customer = findCustomerByUserId(userId);
 
-        if (kycRepository.existsByCustomerId(
-                customer.getId())) {
-
+        if (kycRepository.existsByCustomerId(customer.getId())) {
             throw new KycAlreadyExistsException(
-                    "KYC verification already exists."
-            );
+                    "KYC verification already exists.");
         }
 
         KycVerification kyc = KycVerification.builder()
@@ -53,68 +51,59 @@ public class KycServiceImpl implements KycService {
                 .status(KycStatus.NOT_STARTED)
                 .build();
 
-        KycVerification savedKyc =
-                kycRepository.save(kyc);
+        KycVerification savedKyc = kycRepository.save(kyc);
 
         return KycMapper.toResponse(savedKyc);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public KycResponse getMyKyc(UUID userId) {
+    public @NonNull KycResponse getMyKyc(
+            @NonNull UUID userId) {
 
         Customer customer = findCustomerByUserId(userId);
 
-        KycVerification kyc =
-                kycRepository.findByCustomerId(
-                        customer.getId()
-                ).orElseThrow(() ->
+        KycVerification kyc = kycRepository.findByCustomerId(customer.getId())
+                .orElseThrow(() ->
                         new KycNotFoundException(
-                                "KYC verification not found."
-                        ));
+                                "KYC verification not found."));
 
         return KycMapper.toResponse(kyc);
     }
 
     @Override
-    public KycResponse submitKyc(UUID userId) {
+    public @NonNull KycResponse submitKyc(
+            @NonNull UUID userId) {
 
         Customer customer = findCustomerByUserId(userId);
 
-        KycVerification kyc =
-                kycRepository.findByCustomerId(
-                        customer.getId()
-                ).orElseThrow(() ->
+        KycVerification kyc = kycRepository.findByCustomerId(customer.getId())
+                .orElseThrow(() ->
                         new KycNotFoundException(
-                                "KYC verification not found."
-                        ));
+                                "KYC verification not found."));
 
-        if (kyc.getStatus() != KycStatus.NOT_STARTED
-                && kyc.getStatus() != KycStatus.REJECTED) {
+        if (kyc.getStatus() != KycStatus.NOT_STARTED &&
+            kyc.getStatus() != KycStatus.REJECTED) {
 
             throw new IllegalStateException(
-                    "KYC cannot be submitted in its current state."
-            );
+                    "KYC cannot be submitted in its current state.");
         }
 
         kyc.setStatus(KycStatus.PENDING);
         kyc.setSubmittedAt(LocalDateTime.now());
         kyc.setRejectionReason(null);
 
-        KycVerification savedKyc =
-                kycRepository.save(kyc);
+        KycVerification savedKyc = kycRepository.save(kyc);
 
         return KycMapper.toResponse(savedKyc);
     }
 
-    private Customer findCustomerByUserId(
-            UUID userId) {
+    private @NonNull Customer findCustomerByUserId(
+            @NonNull UUID userId) {
 
-        return customerRepository
-                .findByUserId(userId)
+        return customerRepository.findByUserId(userId)
                 .orElseThrow(() ->
                         new CustomerNotFoundException(
-                                "Customer profile not found."
-                        ));
+                                "Customer profile not found."));
     }
 }

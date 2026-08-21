@@ -1,5 +1,9 @@
 package com.axion.authentication.mapper;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.axion.authentication.dto.RoleResponse;
 import com.axion.authentication.dto.RegisterRequest;
 import com.axion.authentication.dto.UserResponse;
 import com.axion.authentication.entity.User;
@@ -47,7 +51,16 @@ public class UserMapper {
         response.setLastName(user.getLastName());
         response.setPhoneNumber(user.getPhoneNumber());
         response.setStatus(user.getStatus());
-        response.setRoles(user.getRoles());
+        Set<RoleResponse> roles = user.getRoles()
+        .stream()
+        .map(role -> new RoleResponse(
+                role.getId(),
+                role.getName(),
+                role.getDescription()
+        ))
+        .collect(Collectors.toSet());
+
+        response.setRoles(roles);
 
         return response;
     }

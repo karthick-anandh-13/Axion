@@ -3,7 +3,14 @@ package com.axion.kyc.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
+
 import com.axion.customer.entity.Customer;
+import com.axion.authentication.entity.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,6 +32,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+
 @Entity
 @Table(name = "kyc_verifications")
 @Getter
@@ -33,6 +42,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class KycVerification {
+
+        public User getUser() {
+                return customer == null ? null : customer.getUser();
+        }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -78,9 +91,38 @@ public class KycVerification {
         updatedAt = now;
     }
 
+
+    @Builder.Default
+    @OneToMany(
+            mappedBy = "kycVerification",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<KycDocument> documents = new ArrayList<>();
     @PreUpdate
     public void preUpdate() {
 
         updatedAt = LocalDateTime.now();
     }
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private KycDecision decision;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 30)
+    private KycVerificationMethod verificationMethod;
+
+    @Column
+    private Double confidenceScore;
+
+    @Column(length = 2000)
+    private String decisionReason;
+    @Builder.Default
+    @OneToMany(
+            mappedBy = "kycVerification",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<VerificationSignal> signals =
+            new ArrayList<>();
 }

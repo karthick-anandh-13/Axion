@@ -5,7 +5,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.axion.authentication.entity.User;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -86,4 +90,11 @@ public class Customer {
 
         updatedAt = LocalDateTime.now();
     }
+    @Builder.Default
+    @OneToMany(
+            mappedBy = "customer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<CustomerAddress> addresses = new ArrayList<>();
 }

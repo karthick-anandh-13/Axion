@@ -20,4 +20,9 @@ public interface BorrowingRequestService {
     List<BorrowingRequestResponse> getBorrowerRequests(
             UUID borrowerId
     );
+
+    BorrowingRequestResponse submitRequest(
+            UUID requestId,
+            UUID borrowerId
+    );
 }
