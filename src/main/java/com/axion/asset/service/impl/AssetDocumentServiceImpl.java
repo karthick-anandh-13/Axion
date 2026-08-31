@@ -126,13 +126,15 @@ public class AssetDocumentServiceImpl implements AssetDocumentService {
 
     private boolean isAllowedContentType(String contentType) {
 
-        return switch (contentType) {
-            case "application/pdf",
-                 "image/jpeg",
-                 "image/png",
-                 "image/webp" -> true;
-            default -> false;
-        };
+        switch (contentType) {
+            case "application/pdf":
+            case "image/jpeg":
+            case "image/png":
+            case "image/webp":
+                return true;
+            default:
+                return false;
+        }
     }
 
     private String calculateSha256(

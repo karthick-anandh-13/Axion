@@ -31,7 +31,7 @@ export default function Borrow() {
       (Math.pow(1 + r, n) - 1);
 
     return Math.round(value);
-  }, [amount, months]);
+  }, [amount, interest, months]);
 
   const approval = Math.min(
     99,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Bell,
@@ -44,12 +44,8 @@ function Toggle({
 export default function Settings() {
   const { data, mutation } = useSettings();
 
-  const [settings, setSettings] =
-    useState<UserSettings | null>(null);
-
-  useEffect(() => {
-    if (data) setSettings(data);
-  }, [data]);
+  const [overrides, setOverrides] = useState<Partial<UserSettings>>({});
+  const settings = data ? { ...data, ...overrides } : null;
 
   if (!settings) {
     return (
@@ -69,7 +65,7 @@ export default function Settings() {
       [key]: !settings[key],
     };
 
-    setSettings(updated);
+    setOverrides((current) => ({ ...current, [key]: updated[key] }));
     mutation.mutate(updated);
   };
 

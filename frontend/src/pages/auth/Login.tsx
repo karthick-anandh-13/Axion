@@ -19,7 +19,7 @@ export default function Login() {
       setLoading(true);
 
       await login({
-        email,
+        usernameOrEmail: email,
         password,
       });
 

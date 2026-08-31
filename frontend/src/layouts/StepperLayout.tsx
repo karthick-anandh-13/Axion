@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import CinematicBackground from "../components/background/CinematicBackground";
 import GlassCard from "../components/ui/GlassCard";

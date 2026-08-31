@@ -5,9 +5,7 @@ export interface Notification {
 
   message: string;
 
-  category: "PAYMENT" | "AI" | "MARKETPLACE" | "SECURITY";
-
-  read: boolean;
-
-  createdAt: string;
+  type: "EMI_REMINDER" | "EMI_RECEIPT" | "LOAN_DISBURSED" | "OFFER_EXPIRED" | "LOAN_APPROVED" | "OVERDUE_ALERT";
+  status: "PENDING" | "SENT" | "READ" | "FAILED";
+  sentAt: string;
 }

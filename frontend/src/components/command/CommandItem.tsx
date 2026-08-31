@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
+import type { LucideIcon } from "lucide-react";
 
 interface Props {
   title: string;
-  Icon: any;
+  Icon: LucideIcon;
   active: boolean;
   onClick: () => void;
 }

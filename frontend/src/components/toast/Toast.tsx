@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { CheckCircle2, AlertCircle, Info } from "lucide-react";
+import type { ToastItem } from "../../hooks/useToast";
 
-export default function Toast({ toast }: any) {
+export default function Toast({ toast }: { toast: ToastItem }) {
   const Icon =
     toast.type === "success"
       ? CheckCircle2

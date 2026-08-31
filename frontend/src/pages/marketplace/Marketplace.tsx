@@ -13,19 +13,7 @@ import type { BorrowerOpportunity } from "../../types/marketplace";
 export default function Marketplace() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-
-  const marketplaceParams = {
-    search,
-    filter,
-  };
-
-  const marketplace = useMarketplace(marketplaceParams as any) as {
-    borrowers?: BorrowerOpportunity[];
-    isLoading?: boolean;
-  } | null;
-
-  const data = marketplace?.borrowers ?? [];
-  const isLoading = marketplace?.isLoading ?? false;
+  const { data = [], isLoading } = useMarketplace();
 
   const borrowers = useMemo(() => {
     return data.filter((b: BorrowerOpportunity) => {

@@ -10,8 +10,6 @@ const segments = [
 ];
 
 export default function AllocationDonut() {
-  let offset = 0;
-
   return (
     <div className="flex items-center justify-center">
       <svg width="180" height="180" viewBox="0 0 180 180">
@@ -23,10 +21,11 @@ export default function AllocationDonut() {
             strokeWidth="12"
           />
 
-          {segments.map((s) => {
+          {segments.map((s, index) => {
             const dash = (s.value / 100) * circumference;
-            const dashOffset = offset;
-            offset += dash;
+            const dashOffset = segments
+              .slice(0, index)
+              .reduce((total, segment) => total + (segment.value / 100) * circumference, 0);
 
             return (
               <motion.circle

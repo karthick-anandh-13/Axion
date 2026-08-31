@@ -6,6 +6,32 @@ import StepperLayout from "../../layouts/StepperLayout";
 import GlassCard from "../../components/ui/GlassCard";
 import PrimaryButton from "../../components/ui/PrimaryButton";
 
+interface UploadBoxProps {
+  title: string;
+  subtitle: string;
+  uploaded: boolean;
+  onUpload: () => void;
+}
+
+function UploadBox({ title, subtitle, uploaded, onUpload }: UploadBoxProps) {
+  return (
+    <button onClick={onUpload} className="w-full text-left">
+      <GlassCard hover className={`p-5 transition-all duration-300 ${uploaded ? "border-[#C7F5D9]/50 bg-[#C7F5D9]/10" : ""}`}>
+        <div className="flex items-center gap-4">
+          <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${uploaded ? "bg-[#C7F5D9]/15" : "bg-white/5"}`}>
+            {uploaded ? <FileCheck className="text-[#C7F5D9]" size={24} /> : <Upload className="text-[#F6E7C8]" size={22} />}
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg text-white">{title}</h3>
+            <p className="mt-1 text-sm text-white/50">{subtitle}</p>
+          </div>
+          {uploaded && <div className="rounded-full bg-[#C7F5D9] px-3 py-1 text-xs font-semibold text-black">Verified</div>}
+        </div>
+      </GlassCard>
+    </button>
+  );
+}
+
 export default function KYC() {
   const navigate = useNavigate();
 
@@ -15,56 +41,6 @@ export default function KYC() {
 
   const completed =
     panUploaded && aadhaarUploaded && selfieUploaded;
-
-  const UploadBox = ({
-    title,
-    subtitle,
-    uploaded,
-    onUpload,
-  }: {
-    title: string;
-    subtitle: string;
-    uploaded: boolean;
-    onUpload: () => void;
-  }) => (
-    <button onClick={onUpload} className="w-full text-left">
-      <GlassCard
-        hover
-        className={`p-5 transition-all duration-300 ${
-          uploaded
-            ? "border-[#C7F5D9]/50 bg-[#C7F5D9]/10"
-            : ""
-        }`}
-      >
-        <div className="flex items-center gap-4">
-          <div
-            className={`flex h-14 w-14 items-center justify-center rounded-2xl ${
-              uploaded ? "bg-[#C7F5D9]/15" : "bg-white/5"
-            }`}
-          >
-            {uploaded ? (
-              <FileCheck className="text-[#C7F5D9]" size={24} />
-            ) : (
-              <Upload className="text-[#F6E7C8]" size={22} />
-            )}
-          </div>
-
-          <div className="flex-1">
-            <h3 className="text-lg text-white">{title}</h3>
-            <p className="mt-1 text-sm text-white/50">
-              {subtitle}
-            </p>
-          </div>
-
-          {uploaded && (
-            <div className="rounded-full bg-[#C7F5D9] px-3 py-1 text-xs font-semibold text-black">
-              Verified
-            </div>
-          )}
-        </div>
-      </GlassCard>
-    </button>
-  );
 
   return (
     <StepperLayout

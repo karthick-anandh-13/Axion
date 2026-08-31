@@ -10,11 +10,11 @@ export default function SplashScreen() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("/dashboard");
+      navigate(localStorage.getItem("axion_token") ? "/dashboard" : "/login");
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="relative flex h-screen items-center justify-center overflow-hidden bg-[#070707]">

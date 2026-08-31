@@ -7,9 +7,9 @@ import { useNotifications } from "../../hooks/useNotifications";
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
 
-  const { data } = useNotifications();
+  const { data = [] } = useNotifications();
 
-  const unread = data?.filter((n) => !n.read).length ?? 0;
+  const unread = data.filter((notification) => notification.status !== "READ").length;
 
   return (
     <>
@@ -27,7 +27,10 @@ export default function NotificationBell() {
         )}
       </motion.button>
 
-      <NotificationDrawer open={open} onClose={() => setOpen(false)} />
+      <NotificationDrawer
+        open={open}
+        onClose={() => setOpen(false)}
+      />
     </>
   );
 }

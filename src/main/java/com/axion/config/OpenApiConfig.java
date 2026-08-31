@@ -19,17 +19,14 @@ public class OpenApiConfig {
 
                 .info(new Info()
                         .title("Axion Loan Management API")
-                        .description("""
-                                Enterprise Loan Management & Compliance Platform
-
-                                Features:
-                                • Borrower Management
-                                • Lending Partners
-                                • AI Matching Engine
-                                • Loan Offers
-                                • EMI Payments
-                                • Ledger Accounting
-                                """)
+                        .description("Enterprise Loan Management & Compliance Platform\n\n" +
+                                "Features:\n" +
+                                "• Borrower Management\n" +
+                                "• Lending Partners\n" +
+                                "• AI Matching Engine\n" +
+                                "• Loan Offers\n" +
+                                "• EMI Payments\n" +
+                                "• Ledger Accounting")
                         .version("v1.0.0")
                         .contact(new Contact()
                                 .name("Karthick Anandh")

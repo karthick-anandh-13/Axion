@@ -5,13 +5,17 @@ import GlassCard from "../../components/ui/GlassCard";
 import GlassInput from "../../components/ui/GlassInput";
 import PrimaryButton from "../../components/ui/PrimaryButton";
 import { useNavigate } from "react-router-dom";
+import { register } from "../../api/auth";
 
 export default function Register() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const strength = useMemo(() => {
@@ -40,7 +44,34 @@ export default function Register() {
     password &&
     confirmPassword &&
     passwordsMatch &&
+    phoneNumber &&
     accepted;
+
+  const handleRegister = async () => {
+    if (!isFormValid || submitting) return;
+
+    const nameParts = fullName.trim().split(/\s+/);
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(" ") || firstName;
+
+    try {
+      setSubmitting(true);
+      setError("");
+      await register({
+        username: email.trim().toLowerCase(),
+        email: email.trim().toLowerCase(),
+        password,
+        firstName,
+        lastName,
+        phoneNumber: phoneNumber.trim(),
+      });
+      navigate("/login");
+    } catch {
+      setError("We could not create your account. Check the details and try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <AuthLayout>
@@ -77,6 +108,13 @@ export default function Register() {
             type="email"
             value={email}
             onChange={setEmail}
+          />
+
+          <GlassInput
+            label="Phone Number"
+            type="tel"
+            value={phoneNumber}
+            onChange={setPhoneNumber}
           />
 
           <GlassInput
@@ -124,6 +162,8 @@ export default function Register() {
             </p>
           )}
 
+          {error && <p className="text-sm text-red-300">{error}</p>}
+
           {/* Terms */}
           <label className="flex items-start gap-3 text-sm text-white/60">
             <input
@@ -140,9 +180,9 @@ export default function Register() {
             </span>
           </label>
 
-          <div className={isFormValid ? "" : "opacity-50 pointer-events-none"}>
-            <PrimaryButton>Create Account</PrimaryButton>
-          </div>
+          <PrimaryButton onClick={handleRegister} disabled={!isFormValid || submitting}>
+            {submitting ? "Creating Account..." : "Create Account"}
+          </PrimaryButton>
         </div>
 
         {/* Footer */}
@@ -154,9 +194,6 @@ export default function Register() {
           >
             Sign In
           </Link>
-        </div>
-        <div onClick={() => navigate("/verify")}>
-            <PrimaryButton>Create Account</PrimaryButton>
         </div>
       </GlassCard>
     </AuthLayout>

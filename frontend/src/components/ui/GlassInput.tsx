@@ -3,7 +3,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 interface GlassInputProps {
   label: string;
-  type?: "text" | "email" | "password" | "number";
+  type?: "text" | "email" | "password" | "number" | "tel";
   value?: string;
   onChange?: (value: string) => void;
   disabled?: boolean;

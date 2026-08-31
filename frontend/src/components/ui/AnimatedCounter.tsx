@@ -19,7 +19,7 @@ export default function AnimatedCounter({
 
   useEffect(() => {
     motionValue.set(value);
-  }, [value]);
+  }, [motionValue, value]);
 
   return (
     <motion.span>

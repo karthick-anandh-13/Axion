@@ -1,10 +1,18 @@
 export interface LoginRequest {
-  email: string;
+  usernameOrEmail: string;
   password: string;
 }
 
 export interface LoginResponse {
-  token: string;
-  userId: number;
-  fullName: string;
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  expiresIn: number;
+  user: {
+    id: string;
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
 }

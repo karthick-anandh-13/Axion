@@ -3,8 +3,9 @@ package com.axion.authentication.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,13 +30,22 @@ public class SecurityConfig {
     ) throws Exception {
 
         http
+            // Enable CORS using CorsConfig.java
+            .cors(Customizer.withDefaults())
+
+            // Disable CSRF for REST APIs
             .csrf(csrf -> csrf.disable())
 
+            // Stateless JWT authentication
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
             .authorizeHttpRequests(auth -> auth
+
+                // Allow CORS preflight requests
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                 // Swagger
                 .requestMatchers(
                     "/swagger-ui/**",

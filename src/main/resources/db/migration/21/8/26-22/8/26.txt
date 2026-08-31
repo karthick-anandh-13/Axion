@@ -1,0 +1,205 @@
+
+# AXION — 35 Hour Development Worklog
+
+**Project:** AXION (AI-Powered Peer-to-Peer Lending Platform)
+
+**Duration:** 35 Hours
+
+**Developer:** Karthick Anandh
+
+**Stack:** Java 21, Spring Boot, Spring Security, PostgreSQL, JWT, Flyway, Maven
+
+---
+
+# Objective
+
+Build the complete backend workflow for a secure lending platform where borrowers and lenders interact through authenticated REST APIs.
+
+---
+
+# Completed Modules
+
+## 1. Authentication & Authorization
+
+- JWT-based authentication
+- User registration
+- Secure login endpoint
+- Bearer token authorization
+- Current user profile API
+- Password encryption using Spring Security
+
+**Verified APIs**
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/users/me`
+
+---
+
+## 2. Customer Management
+
+Implemented complete customer profile lifecycle.
+
+### Features
+
+- Create customer profile
+- Retrieve own profile
+- Update profile
+- Validation using Jakarta Validation
+
+**Verified APIs**
+
+- `POST /api/customers`
+- `GET /api/customers/me`
+
+---
+
+## 3. KYC Module
+
+Built customer verification workflow.
+
+### Workflow
+
+`NOT_STARTED → PENDING`
+
+### Features
+
+- Create KYC record
+- Retrieve own KYC
+- Submit verification request
+
+**Verified APIs**
+
+- `POST /api/kyc`
+- `GET /api/kyc/me`
+- `POST /api/kyc/me/submit`
+
+---
+
+## 4. Digital Asset Module
+
+Implemented collateral declaration system.
+
+### Features
+
+- Declare assets
+- Retrieve asset by ID
+- Retrieve authenticated user's assets
+
+### Example Asset
+
+- Vehicle
+- Hyundai i20 Sportz
+- Declared value: ₹850,000
+
+**Verified APIs**
+
+- `POST /api/v1/assets`
+- `GET /api/v1/assets/me`
+- `GET /api/v1/assets/{assetId}`
+
+---
+
+## 5. Borrowing Request Module
+
+Implemented loan application workflow.
+
+### Features
+
+- Create borrowing request
+- View borrower requests
+- Get request by ID
+- Submit borrowing request
+
+### Workflow
+
+`DRAFT → SUBMITTED`
+
+**Verified APIs**
+
+- `POST /api/v1/borrowing/requests`
+- `GET /api/v1/borrowing/requests/me`
+- `GET /api/v1/borrowing/requests/{id}`
+- `POST /api/v1/borrowing/requests/{id}/submit`
+
+---
+
+## 6. Lending Partner Module
+
+Implemented institutional lender registration.
+
+### Features
+
+- Register lending organization
+- Capital allocation
+- APR range configuration
+- Risk preference storage
+
+**Verified API**
+
+- `POST /api/v1/lending/partners`
+
+---
+
+# Bug Fixes Completed
+
+## Fixed
+
+- JWT Authorization header handling
+- `/api/users/me` 500 Internal Server Error
+- Customer profile lookup issues
+- KYC customer dependency errors
+- Missing submit endpoint in Borrowing Controller
+- Repository/service mapping issues
+- DTO validation problems
+- Spring Security authentication flow
+- PowerShell token persistence during API testing
+
+---
+
+# End-to-End Workflow Tested
+
+1. User Registration
+2. Login
+3. Customer Creation
+4. KYC Creation
+5. KYC Submission
+6. Asset Declaration
+7. Borrowing Request Creation
+8. Borrowing Submission
+9. Lending Partner Registration
+
+All above modules were successfully tested using authenticated REST API calls.
+
+---
+
+# Current Status
+
+| Module | Status |
+|---|---|
+| Authentication | Complete |
+| Customer | Complete |
+| KYC | Complete |
+| Asset | Complete |
+| Borrowing | Complete |
+| Lending Partner | Complete |
+| JWT Security | Complete |
+| Matching Engine | Under Testing |
+| Loan Offer Generation | Under Testing |
+
+---
+
+# Next Milestone
+
+- Debug Matching Engine
+- Generate lender matches
+- Create loan offers
+- Offer acceptance workflow
+- Disbursement module
+- Ledger integration
+
+---
+
+**Total Development Time:** 35 Hours
+
+AXION backend foundation is now functionally complete through the borrowing and lending registration workflow, with matching and offer generation as the remaining active milestone.

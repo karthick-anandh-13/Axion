@@ -4,13 +4,13 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/axion_db
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:K4rth1ck13@}
+    username: postgres
+    password: "K4rth1ck13@"
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update      # CHANGED: validate → update
+      ddl-auto: update
     show-sql: true
     open-in-view: false
     properties:
@@ -40,8 +40,8 @@ axion:
   security:
     jwt:
       issuer: axion-api
-      access-token-expiration: 31536000
-      refresh-token-expiration: 31536000
+      access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:900}
+      refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:2592000}
 
   storage:
     local-path: ./storage/assets
