@@ -5,6 +5,7 @@ import {
   Landmark,
   Brain,
   PieChart,
+  Calendar,
   Settings,
 } from "lucide-react";
 
@@ -14,6 +15,7 @@ const items = [
   { icon: Landmark, label: "Lend", path: "/lend" },
   { icon: Brain, label: "AI", path: "/ai" },
   { icon: PieChart, label: "Portfolio", path: "/portfolio" },
+  { icon: Calendar, label: "Repayment", path: "/repayment" },
   { icon: Settings, label: "Settings", path: "/settings" },
 ];
 

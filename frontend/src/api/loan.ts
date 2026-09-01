@@ -8,7 +8,7 @@ export async function createLoan(
   data: CreateLoanRequest
 ): Promise<LoanResponse> {
   const response = await api.post<LoanResponse>(
-    "/v1/loans",
+    "/v1/borrowing/requests",
     data
   );
 

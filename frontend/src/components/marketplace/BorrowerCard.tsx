@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import GlassCard from "../ui/GlassCard";
 import PrimaryButton from "../ui/PrimaryButton";
 import { RiskBadge } from "./RiskBadge";
@@ -11,6 +12,7 @@ interface Props {
 export default function BorrowerCard({
   borrower,
 }: Props) {
+  const navigate = useNavigate();
   return (
     <motion.div
       whileHover={{
@@ -63,7 +65,7 @@ export default function BorrowerCard({
         </div>
 
         <div className="mt-6">
-          <PrimaryButton>Invest Now</PrimaryButton>
+          <PrimaryButton onClick={() => navigate(`/marketplace/${borrower.id}`)}>Invest Now</PrimaryButton>
         </div>
       </GlassCard>
     </motion.div>

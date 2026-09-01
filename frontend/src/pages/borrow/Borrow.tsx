@@ -12,10 +12,25 @@ import GlassCard from "../../components/ui/GlassCard";
 import PrimaryButton from "../../components/ui/PrimaryButton";
 import { createLoan } from "../../api/loan";
 
+const PURPOSES = [
+  "PERSONAL",
+  "BUSINESS",
+  "EDUCATION",
+  "MEDICAL",
+  "VEHICLE",
+  "HOME_REPAIR",
+  "DEBT_CONSOLIDATION",
+  "EMERGENCY",
+  "AGRICULTURE",
+  "OTHER",
+] as const;
+
 export default function Borrow() {
   const [amount, setAmount] = useState(850000);
-  const [months, setMonths] = useState(24);
-  const [purpose, setPurpose] = useState("");
+  const [months, setMonths] = useState(12);
+  const [purpose, setPurpose] =
+    useState<(typeof PURPOSES)[number]>("MEDICAL");
+  const [description, setDescription] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -31,7 +46,7 @@ export default function Borrow() {
       (Math.pow(1 + r, n) - 1);
 
     return Math.round(value);
-  }, [amount, interest, months]);
+  }, [amount, months]);
 
   const approval = Math.min(
     99,
@@ -39,8 +54,8 @@ export default function Borrow() {
   );
 
   const handleSubmit = async () => {
-    if (!purpose.trim()) {
-      alert("Please enter the purpose of the loan.");
+    if (description.trim().length < 3) {
+      alert("Please enter a valid purpose description.");
       return;
     }
 
@@ -48,15 +63,20 @@ export default function Borrow() {
       setLoading(true);
 
       await createLoan({
-        amount,
-        tenureMonths: months,
+        requestedAmount: amount,
+        requestedTenureMonths: months,
+        maximumAcceptableApr: 11,
         purpose,
+        purposeDescription: description,
       });
 
       setSuccess(true);
-      setPurpose("");
+      setDescription("");
+      setPurpose("MEDICAL");
+      setAmount(850000);
+      setMonths(12);
     } catch (error) {
-      console.error(error);
+      console.error("Loan submission failed:", error);
       alert("Unable to submit your application.");
     } finally {
       setLoading(false);
@@ -73,7 +93,7 @@ export default function Borrow() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <GlassCard className="lg:col-span-2 p-8">
+        <GlassCard className="p-8 lg:col-span-2">
           <div className="mb-8 flex items-center gap-3">
             <IndianRupee className="text-[#F6E7C8]" />
             <p className="text-white/50">Loan Amount</p>
@@ -85,9 +105,9 @@ export default function Borrow() {
 
           <input
             type="range"
-            min={50000}
+            min={1000}
             max={5000000}
-            step={10000}
+            step={1000}
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
             className="mt-10 h-2 w-full appearance-none rounded-full bg-white/10 accent-[#C7F5D9]"
@@ -100,8 +120,9 @@ export default function Borrow() {
               {[12, 24, 36, 60].map((m) => (
                 <button
                   key={m}
+                  type="button"
                   onClick={() => setMonths(m)}
-                  className={`rounded-2xl py-3 transition-all ${
+                  className={`rounded-2xl py-3 transition ${
                     months === m
                       ? "border border-[#C7F5D9]/40 bg-[#C7F5D9]/10 text-[#C7F5D9]"
                       : "border border-white/10 bg-white/5 text-white/50"
@@ -114,14 +135,36 @@ export default function Borrow() {
           </div>
 
           <div className="mt-10">
-            <p className="mb-4 text-white/50">Purpose</p>
+            <p className="mb-4 text-white/50">Loan Category</p>
+
+            <select
+              value={purpose}
+              onChange={(e) =>
+                setPurpose(e.target.value as (typeof PURPOSES)[number])
+              }
+              className="w-full rounded-2xl border border-white/10 bg-white/5 p-4 text-white outline-none"
+            >
+              {PURPOSES.map((item) => (
+                <option
+                  key={item}
+                  value={item}
+                  className="bg-[#111827]"
+                >
+                  {item.replaceAll("_", " ")}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mt-8">
+            <p className="mb-4 text-white/50">Purpose Description</p>
 
             <textarea
               rows={5}
-              value={purpose}
-              onChange={(e) => setPurpose(e.target.value)}
-              placeholder="Example: Business expansion, education, medical expenses..."
-              className="w-full resize-none rounded-2xl border border-white/10 bg-white/5 p-4 text-white placeholder:text-white/25 outline-none transition focus:border-[#C7F5D9]/40"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe why you need this loan..."
+              className="w-full resize-none rounded-2xl border border-white/10 bg-white/5 p-4 text-white placeholder:text-white/30 outline-none"
             />
           </div>
         </GlassCard>
@@ -149,7 +192,7 @@ export default function Borrow() {
             <motion.div
               animate={{ width: `${approval}%` }}
               transition={{ duration: 0.8 }}
-              className="h-full rounded-full bg-linear-to-r from-[#C7F5D9] to-[#F6E7C8]"
+              className="h-full rounded-full bg-gradient-to-r from-[#C7F5D9] to-[#F6E7C8]"
             />
           </div>
 
@@ -207,22 +250,14 @@ export default function Borrow() {
                 damping: 18,
               }}
             >
-              <GlassCard className="w-420px p-10">
+              <GlassCard className="w-[420px] p-10">
                 <div className="flex flex-col items-center text-center">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{
-                      delay: 0.2,
-                      type: "spring",
-                    }}
-                    className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-[#C7F5D9]/10"
-                  >
+                  <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-[#C7F5D9]/10">
                     <Check
                       size={46}
                       className="text-[#C7F5D9]"
                     />
-                  </motion.div>
+                  </div>
 
                   <h2 className="text-3xl font-light text-white">
                     Application Submitted
@@ -231,23 +266,6 @@ export default function Borrow() {
                   <p className="mt-3 text-sm text-white/50">
                     Your loan request has entered AXION's AI underwriting pipeline.
                   </p>
-
-                  <div className="mt-6 space-y-3 text-sm">
-                    <div className="flex items-center gap-2 text-white/80">
-                      <Check size={16} className="text-[#C7F5D9]" />
-                      Identity verified
-                    </div>
-
-                    <div className="flex items-center gap-2 text-white/80">
-                      <Check size={16} className="text-[#C7F5D9]" />
-                      Credit evaluation started
-                    </div>
-
-                    <div className="flex items-center gap-2 text-white/80">
-                      <Check size={16} className="text-[#C7F5D9]" />
-                      Estimated review: 2–5 minutes
-                    </div>
-                  </div>
 
                   <div className="mt-8 w-full">
                     <PrimaryButton

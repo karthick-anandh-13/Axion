@@ -18,6 +18,7 @@ import SplashScreen from "./pages/splash/SplashScreen";
 import Borrow from "./pages/borrow/Borrow";
 import Portfolio from "./pages/portfolio/Portfolio";
 import Marketplace from "./pages/marketplace/Marketplace";
+import InvestmentDetails from "./pages/marketplace/InvestmentDetails";
 import CreditIntelligence from "./pages/ai/CreditIntelligence";
 import Repayment from "./pages/repayment/Repayment";
 import Settings from "./pages/settings/Settings";
@@ -33,6 +34,9 @@ import Goals from "./pages/onboarding/Goals";
 import KYC from "./pages/onboarding/KYC";
 import AIProfile from "./pages/onboarding/AIProfile";
 import Notifications from "./pages/notifications/Notifications";
+import PaymentSummary from "./pages/payment/PaymentSummary";
+import PaymentProcessing from "./pages/payment/PaymentProcessing";
+import PaymentSuccess from "./pages/payment/PaymentSuccess";
 import ProtectedRoute from "./router/ProtectedRoute";
 
 function LandingPage() {
@@ -139,6 +143,42 @@ export default function App() {
             element={
               <PageTransition>
                 <Marketplace />
+              </PageTransition>
+            }
+          />
+
+          {/* Investment Details */}
+          <Route
+            path="/marketplace/:id"
+            element={
+              <PageTransition>
+                <InvestmentDetails />
+              </PageTransition>
+            }
+          />
+
+          {/* Payment Flow */}
+          <Route
+            path="/payment/summary/:id/:userType"
+            element={
+              <PageTransition>
+                <PaymentSummary />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/payment/processing/:investmentId/:userType"
+            element={
+              <PageTransition>
+                <PaymentProcessing />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/payment/success/:investmentId/:userType"
+            element={
+              <PageTransition>
+                <PaymentSuccess />
               </PageTransition>
             }
           />

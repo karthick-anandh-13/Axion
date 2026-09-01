@@ -49,3 +49,6 @@ axion:
 
   ai:
     base-url: http://localhost:8090
+
+  payment:
+    provider: mock
